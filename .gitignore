@@ -42,7 +42,7 @@ appsettings.*.json
 
 # Ignore published output
 publish/
-
+Migrations
 # Ignore test result files
 TestResults/
 
