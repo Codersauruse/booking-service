@@ -15,7 +15,7 @@ public class BookingController : ControllerBase
     }
     
     [HttpGet("/getAllBookings/{userId}")]
-    public async Task<IActionResult> GetAllBookings(string userId)
+    public async Task<IActionResult> GetAllBookings(int userId)
     {
         var bookings = await _bookingService.GetAllBookingAsync(userId);
         return Ok(bookings);
@@ -31,7 +31,7 @@ public class BookingController : ControllerBase
     
     
     [HttpPost("/addtoBooking")]
-    public async Task<IActionResult> AddtoBooking([FromQuery] string userId, [FromQuery] string busId)
+    public async Task<IActionResult> AddtoBooking([FromQuery] int userId, [FromQuery] string busId)
     {
         var bookings = await _bookingService.AddtoBookingAsync(userId, busId);
         return Ok(bookings);

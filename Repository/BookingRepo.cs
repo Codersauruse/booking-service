@@ -15,7 +15,7 @@ public class BookingRepo : IBookingRepo
     }
     
     
-    public  Task<Booking> AddToBookingAsync(string userId, string busId)
+    public  Task<Booking> AddToBookingAsync(int userId, string busId)
     {
         var booking = new Booking
         {
@@ -34,7 +34,7 @@ public class BookingRepo : IBookingRepo
         return booking;
     }
 
-    public async Task<IEnumerable<Booking>> GetAllBookingAsync(string userId)
+    public async Task<IEnumerable<Booking>> GetAllBookingAsync(int userId)
     {
         return await _context.Bookings
             .Where(b => b.UserId == userId)

@@ -4,9 +4,9 @@ namespace booking_service.Repository.Interfaces;
 
 public interface IBookingRepo
 {
-    Task<Booking> AddToBookingAsync(string userId, string busId);
+    Task<Booking> AddToBookingAsync(int userId, string busId);
     Task<Booking?> GetBookingByIdAsync(int id);
-    Task<IEnumerable<Booking>> GetAllBookingAsync(string userId);
+    Task<IEnumerable<Booking>> GetAllBookingAsync(int userId);
     Task<bool> CancelBookingAsync(int bookingId);
     Task<bool> DeleteBookingAsync(int bookingId);
     Task<Booking?> ConfirmBookingAsync(int bookingId, DateTime date, int numberOfSeats, List<int> bookedSeats);

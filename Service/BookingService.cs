@@ -8,13 +8,15 @@ namespace booking_service.Service;
 public class BookingService : IBookingService
 {
     private readonly IBookingRepo _bookingRepo;
+    private readonly ICommunicationService _communicationService;
 
-    public BookingService(IBookingRepo bookingRepo)
+    public BookingService(IBookingRepo bookingRepo, ICommunicationService communicationService)
     {
         _bookingRepo = bookingRepo;
+        _communicationService = communicationService;
     }
     
-    public async Task<IEnumerable<Booking>> GetAllBookingAsync(string userId)
+    public async Task<IEnumerable<Booking>> GetAllBookingAsync(int userId)
     {
         var bookings = await _bookingRepo.GetAllBookingAsync(userId);
 
@@ -38,13 +40,15 @@ public class BookingService : IBookingService
         return existingBooking ;
     }
 
-    public Task<Booking> AddtoBookingAsync(string userId, string busId)
-    {
-        if (userId == null || busId == null)
+    public async Task<Booking> AddtoBookingAsync(int userId, string busId)
+    {   var isUserValid = await _communicationService.validateUserById(userId);
+        var isBusValid =  await _communicationService.validateBusById(busId);
+        
+        if (!isBusValid || !isUserValid)
         {
-           throw new InvalidArgumentException("userId or busId cannot be null"); 
+           throw new InvalidArgumentException("userId or busId is not valid"); 
         }
-        return _bookingRepo.AddToBookingAsync(userId, busId);
+        return await _bookingRepo.AddToBookingAsync(userId, busId);
     }
 
     public async Task<Booking> CreateBookingAsync(int bookingId, DateTime date, int numberOfSeats, List<int> bookedSeats)

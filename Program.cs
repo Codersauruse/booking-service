@@ -5,7 +5,7 @@ using booking_service.Repository.Interfaces;
 using booking_service.Service;
 using booking_service.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
-
+using Steeltoe.Discovery.Client;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -16,15 +16,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICommunicationService, CommunicationService>();
 builder.Services.AddScoped<IBookingRepo, BookingRepo>();
 
 // Add services to the container.
-
+builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddDiscoveryClient(builder.Configuration);
+builder.Services.AddHttpClient();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
