@@ -7,7 +7,10 @@ using booking_service.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Steeltoe.Discovery.Client;
 var builder = WebApplication.CreateBuilder(args);
-
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8083); // Listen on port 8083
+});
 
 // 🔌 Add MySQL + DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -36,10 +39,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();

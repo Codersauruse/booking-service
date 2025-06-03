@@ -28,12 +28,13 @@ public class CommunicationService : ICommunicationService
             }
             var instance = instances.First();
             
-            var url = $"{instance.Uri}/api/user/validateUser/{userId}";
+            var url = $"{instance.Uri}api/user/validateUser/{userId}";
             var response = await httpClient.GetAsync(url);
             return response.IsSuccessStatusCode;
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             throw new InvalidArgumentException("Invalid userId");
 
         }

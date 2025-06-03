@@ -1,23 +1,30 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+﻿FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
+
 WORKDIR /src
-COPY ["booking-service.csproj", "./"]
-RUN dotnet restore "booking-service.csproj"
+
+# Copy the project file and restore dependencies
+COPY *.csproj .
+RUN dotnet restore
+
+# Copy the rest of the application code
 COPY . .
-WORKDIR "/src/"
-RUN dotnet build "./booking-service.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./booking-service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Build the application
+RUN dotnet publish -c Release -o /app/publish
 
-FROM base AS final
+# Use the official .NET 8 runtime image to run the application
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "booking-service.dll"]
+
+
+
+# Copy the published application from the build stage
+COPY --from=build /app/publish .
+# Set environment to Development so Swagger is enabled
+ENV ASPNETCORE_ENVIRONMENT=Development
+# Expose the port your application will run on
+EXPOSE 8083
+
+# Set the entry point for the container
+ENTRYPOINT ["dotnet", "booking-service.dll","--environmnt=Development"]
