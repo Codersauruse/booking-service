@@ -41,16 +41,18 @@ public class BookingService : IBookingService
     }
 
     public async Task<Booking> AddtoBookingAsync(int userId, string busId)
-    {   var isUserValid = await _communicationService.validateUserById(userId);
+    {  
+        var isUserValid = await _communicationService.validateUserById(userId);
         var isBusValid =  await _communicationService.validateBusById(busId);
         
         if (!isBusValid)
         {
-           throw new InvalidArgumentException(" busId is not valid"); 
+           throw new InvalidArgumentException("busId is not valid"); 
         }
+        
         if (!isUserValid)
         {
-           throw new InvalidArgumentException(" userId is not valid"); 
+           throw new InvalidArgumentException("userId is not valid"); 
         }
         
         return await _bookingRepo.AddToBookingAsync(userId, busId);
