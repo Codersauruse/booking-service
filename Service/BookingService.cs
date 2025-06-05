@@ -44,10 +44,15 @@ public class BookingService : IBookingService
     {   var isUserValid = await _communicationService.validateUserById(userId);
         var isBusValid =  await _communicationService.validateBusById(busId);
         
-        if (!isBusValid || !isUserValid)
+        if (!isBusValid)
         {
-           throw new InvalidArgumentException("userId or busId is not valid"); 
+           throw new InvalidArgumentException(" busId is not valid"); 
         }
+        if (!isUserValid)
+        {
+           throw new InvalidArgumentException(" userId is not valid"); 
+        }
+        
         return await _bookingRepo.AddToBookingAsync(userId, busId);
     }
 
