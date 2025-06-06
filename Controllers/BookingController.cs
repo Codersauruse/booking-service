@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace booking_service.Controllers;
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/[controller]/")]
 public class BookingController : ControllerBase
 {
     private readonly IBookingService _bookingService;
@@ -14,7 +14,7 @@ public class BookingController : ControllerBase
         _bookingService = bookingService;
     }
     
-    [HttpGet("/getAllBookings/{userId}")]
+    [HttpGet("getAllBookings/{userId}")]
     public async Task<IActionResult> GetAllBookings(int userId)
     {
         var bookings = await _bookingService.GetAllBookingAsync(userId);
@@ -22,7 +22,7 @@ public class BookingController : ControllerBase
     }
     
     
-    [HttpGet("/getBooking/{bookingId}")]
+    [HttpGet("getBooking/{bookingId}")]
     public async Task<IActionResult> GetBooking(int bookingId)
     {
         var bookings = await _bookingService.GetBookingByIdAsync(bookingId);
@@ -30,28 +30,28 @@ public class BookingController : ControllerBase
     }
     
     
-    [HttpPost("/addtoBooking")]
+    [HttpPost("addtoBooking")]
     public async Task<IActionResult> AddtoBooking([FromQuery] int userId, [FromQuery] string busId)
     {
         var bookings = await _bookingService.AddtoBookingAsync(userId, busId);
         return Ok(bookings);
     }
     
-    [HttpPost("/cancelBooking")]
+    [HttpPost("cancelBooking")]
     public async Task<IActionResult> cancelBooking([FromQuery] int bookingId)
     {
         await _bookingService.CancelBookingAsync(bookingId);
         return Ok("you have cancelled the booking");
     }
     
-    [HttpDelete("/deleteBooking/{bookingId}")]
+    [HttpDelete("deleteBooking/{bookingId}")]
     public async Task<IActionResult> deleteBooking(int bookingId)
     {
         await _bookingService.DeleteBookingAsync(bookingId);
         return Ok("you have deleted the booking");
     }
 
-    [HttpPut("/confirmBooking/{bookingId}")]
+    [HttpPut("confirmBooking/{bookingId}")]
     public async Task<IActionResult> ConfirmBooking(int bookingId, [FromBody] ConfirmBookingRequest request)
     {
         var booking = await _bookingService.CreateBookingAsync(bookingId, request.Date, request.NumberOfSeats, request.BookedSeats);
