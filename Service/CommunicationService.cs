@@ -52,7 +52,7 @@ public class CommunicationService : ICommunicationService
             }
             var instance = instances.First();
             
-            var url = $"{instance.Uri}/api/bus//validateBusId/{busId}";
+            var url = $"{instance.Uri}api/bus/validateBusId/{busId}";
             var response = await httpClient.GetAsync(url);
             return response.IsSuccessStatusCode;
         }
