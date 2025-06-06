@@ -30,7 +30,7 @@ public class CommunicationService : ICommunicationService
             
             var url = $"{instance.Uri}api/user/validateUser/{userId}";
             var response = await httpClient.GetAsync(url);
-            return response.IsSuccessStatusCode;
+            return await response.Content.ReadFromJsonAsync<bool>();
         }
         catch (Exception e)
         {
@@ -54,7 +54,7 @@ public class CommunicationService : ICommunicationService
             
             var url = $"{instance.Uri}api/bus/validateBusId/{busId}";
             var response = await httpClient.GetAsync(url);
-            return response.IsSuccessStatusCode;
+            return await response.Content.ReadFromJsonAsync<bool>();
         }
         catch (Exception e)
         {
