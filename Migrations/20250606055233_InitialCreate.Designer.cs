@@ -12,7 +12,7 @@ using booking_service.Data;
 namespace booking_service.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250527054301_InitialCreate")]
+    [Migration("20250606055233_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -51,9 +51,8 @@ namespace booking_service.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("BookingId");
 
