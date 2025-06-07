@@ -6,6 +6,8 @@ using booking_service.Service;
 using booking_service.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Steeltoe.Discovery.Client;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -17,7 +19,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")))
 );
+var rabbitMqConnection = new ConnectionFactory(){
+    HostName = "rabbitmq",
+    UserName = "guest",
+    Password = "guest"
+}.CreateConnectionAsync().Result;
 
+builder.Services.AddSingleton<IConnection>(rabbitMqConnection); 
+builder.Services.AddScoped<ISeatRequestService, SeatRequestService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ICommunicationService, CommunicationService>();
 builder.Services.AddScoped<IBookingRepo, BookingRepo>();

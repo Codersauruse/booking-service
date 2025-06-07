@@ -35,6 +35,10 @@ public class ExceptionMiddleware
             case InvalidArgumentException:
                 statusCode = (int)HttpStatusCode.BadRequest;
                 break;
+            
+            case MessageException:
+                statusCode = (int)HttpStatusCode.InternalServerError;
+                break;
 
             default:
                 statusCode = (int)HttpStatusCode.InternalServerError;

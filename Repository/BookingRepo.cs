@@ -1,6 +1,7 @@
 using booking_service.Data;
 using booking_service.Models;
 using booking_service.Repository.Interfaces;
+using booking_service.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace booking_service.Repository;
@@ -8,10 +9,12 @@ namespace booking_service.Repository;
 public class BookingRepo : IBookingRepo
 {
     private readonly AppDbContext _context;
+    private readonly ISeatRequestService _seatRequestService;
 
-    public BookingRepo(AppDbContext context)
+    public BookingRepo(AppDbContext context, ISeatRequestService seatRequestService)
     {
         _context = context;
+        _seatRequestService = seatRequestService;
     }
     
     
@@ -69,7 +72,9 @@ public class BookingRepo : IBookingRepo
         booking.NumberOfSeats = numberOfSeats;
         booking.BookedSeats = bookedSeats;
         booking.Status = BookingStatus.Confirmed;
+        
         _context.Bookings.Update(booking);
+        await _seatRequestService.PublishMessage(booking);
         await _context.SaveChangesAsync();
 
         return booking;
